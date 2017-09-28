@@ -21,7 +21,7 @@ namespace FlowingTripBookingSaga
 
         private static int pollingIntervalInMilliseconds = 5;
         private static int pollingNumberOfTasks = 100;
-        private static int pollingLockTimeInMs = 5*60*1000;
+        private static int pollingLockTimeInMs = 5 * 60 * 1000;
         private static int pollingMaxDegreeOfParallelism = 1;
         private static Timer pollingTimer;
 
@@ -37,50 +37,14 @@ namespace FlowingTripBookingSaga
             camunda = new CamundaEngineClient(
                 new System.Uri("http://localhost:8080/engine-rest/engine/default/"), null, null);
 
-            //camunda.Startup(); // Deploy all models to Camunda and Start all found workers automatically
-            // do it programatically instead
-            doit();
+            // Alternative way of doing it: Search assembly and automatically deploy all models to Camunda and start all found workers
+            // camunda.Startup();
 
-            Console.ReadLine(); // wait for ANY KEY
-            camunda.Shutdown(); // Stop Task Workers
-        }
+            DeployModel();
+            RegisterWorker();
 
-        private static void doit()
-        {
-            // Deploy the model
-            camunda.RepositoryService.Deploy("trip-booking", new List<object> {
-                FileParameter.FromManifestResource(Assembly.GetExecutingAssembly(), "FlowingTripBookingSaga.Models.FlowingTripBookingSaga.bpmn") });
-
-            // Register workers
-            registerWorker("reserve-car", externalTask => {
-                Console.WriteLine("Reserving car now...");
-                camunda.ExternalTaskService.Complete(workerId, externalTask.Id);
-            });
-            registerWorker("cancel-car", externalTask => {
-                Console.WriteLine("Cancelling car now...");
-                camunda.ExternalTaskService.Complete(workerId, externalTask.Id);
-            });
-            registerWorker("book-hotel", externalTask => {
-                Console.WriteLine("Reserving hotel now...");
-                camunda.ExternalTaskService.Complete(workerId, externalTask.Id);
-            });
-            registerWorker("cancel-hotel", externalTask => {
-                Console.WriteLine("Cancelling hotel now...");
-                camunda.ExternalTaskService.Complete(workerId, externalTask.Id);
-            });
-            registerWorker("book-flight", externalTask => {
-                Console.WriteLine("Reserving flight now...");
-                Console.WriteLine("Oh no - we hit a glitch!");
-                camunda.ExternalTaskService.Error(workerId, externalTask.Id, "BookingFailed");
-            });
-            registerWorker("cancel-flight", externalTask => {
-                Console.WriteLine("Cancelling flight now...");
-                camunda.ExternalTaskService.Complete(workerId, externalTask.Id);
-            });
-
-            StartPolling();
-
-            for (int i = 0; i < 10; i++)
+            // start some instances:
+            for (int i = 0; i < 1; i++)
             {
                 string processInstanceId = camunda.BpmnWorkflowService.StartProcessInstance("FlowingTripBookingSaga", new Dictionary<string, object>()
                     {
@@ -89,6 +53,45 @@ namespace FlowingTripBookingSaga
                 Console.WriteLine("Started trip booking saga " + processInstanceId);
             }
 
+            Console.ReadLine(); // wait for ANY KEY
+            camunda.Shutdown(); // Stop Task Workers
+        }
+
+        private static void DeployModel() { 
+            camunda.RepositoryService.Deploy("trip-booking", new List<object> {
+                FileParameter.FromManifestResource(Assembly.GetExecutingAssembly(), "FlowingTripBookingSaga.Models.FlowingTripBookingSaga.bpmn") });
+        }
+
+        private static void RegisterWorker()
+        {
+            registerWorker("book-hotel", externalTask => {
+                Console.WriteLine("Book hotel now..."); // e.g. by calling a REST endpoint
+                camunda.ExternalTaskService.Complete(workerId, externalTask.Id);
+            });
+            registerWorker("cancel-hotel", externalTask => {
+                Console.WriteLine("Cancelling hotel now...");
+                camunda.ExternalTaskService.Complete(workerId, externalTask.Id);
+            });
+            registerWorker("book-car", externalTask => {
+                Console.WriteLine("Book car now..."); 
+                //camunda.ExternalTaskService.Failure(workerId, externalTask.Id, "could not connect", (externalTask.Retries ?? 3) - 1, 5000);
+            });
+            registerWorker("cancel-car", externalTask => {
+                Console.WriteLine("Cancelling car now...");
+                camunda.ExternalTaskService.Complete(workerId, externalTask.Id);
+            });       
+            registerWorker("book-flight", externalTask => {
+                Console.WriteLine("Reserving flight now...");
+                camunda.ExternalTaskService.Complete(workerId, externalTask.Id);
+                //Console.WriteLine("Oh no - we hit a glitch!");
+                //camunda.ExternalTaskService.Error(workerId, externalTask.Id, "BookingFailed");
+            });
+            registerWorker("cancel-flight", externalTask => {
+                Console.WriteLine("Cancelling flight now...");
+                camunda.ExternalTaskService.Complete(workerId, externalTask.Id);
+            });
+
+            StartPolling();
         }
 
         private static void StartPolling()
@@ -116,4 +119,5 @@ namespace FlowingTripBookingSaga
         }
     
     }
+    
 }

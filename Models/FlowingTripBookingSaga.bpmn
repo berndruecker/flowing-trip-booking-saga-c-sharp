@@ -1,32 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="definitions_17b31793-6b22-43bb-91a5-b481a8666afb" targetNamespace="http://www.omg.org/spec/BPMN/20100524/MODEL" exporter="Camunda Modeler" exporterVersion="1.7.1">
+<definitions xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="definitions_17b31793-6b22-43bb-91a5-b481a8666afb" targetNamespace="http://www.omg.org/spec/BPMN/20100524/MODEL" exporter="Camunda Modeler" exporterVersion="1.9.0">
   <process id="FlowingTripBookingSaga" name="Trip Booking&#10;&#10;" isExecutable="true">
     <startEvent id="Start-trip">
       <outgoing>sequenceFlow_273537a1-204b-492e-bbb2-6344984aff54</outgoing>
     </startEvent>
-    <serviceTask id="Activity-Reserve-car" name="Reserve car" camunda:type="external" camunda:topic="reserve-car">
-      <incoming>sequenceFlow_273537a1-204b-492e-bbb2-6344984aff54</incoming>
-      <outgoing>sequenceFlow_da56cb9d-75e9-49d4-84a0-38939a1c4e9d</outgoing>
+    <serviceTask id="Activity-Reserve-car" name="Book car" camunda:type="external" camunda:topic="book-car">
+      <incoming>SequenceFlow_0ir1oq4</incoming>
+      <outgoing>SequenceFlow_0yroa9a</outgoing>
     </serviceTask>
-    <sequenceFlow id="sequenceFlow_273537a1-204b-492e-bbb2-6344984aff54" sourceRef="Start-trip" targetRef="Activity-Reserve-car" />
+    <sequenceFlow id="sequenceFlow_273537a1-204b-492e-bbb2-6344984aff54" sourceRef="Start-trip" targetRef="Activity-Book-hotel" />
     <boundaryEvent id="boundaryEvent_69b05d2f-9def-464d-a271-188ba53e2139" attachedToRef="Activity-Reserve-car">
       <compensateEventDefinition id="compensateEventDefinition_5d008dc8-14d5-41d6-9b68-b3c24cf880e3" />
     </boundaryEvent>
     <serviceTask id="Activity-Cancel-car-compensation" name="Cancel car" isForCompensation="true" camunda:type="external" camunda:topic="cancel-car" />
     <serviceTask id="Activity-Book-hotel" name="Book hotel" camunda:type="external" camunda:topic="book-hotel">
-      <incoming>sequenceFlow_da56cb9d-75e9-49d4-84a0-38939a1c4e9d</incoming>
-      <outgoing>sequenceFlow_d0a8be0c-61c2-4b9a-b444-00dc7169849a</outgoing>
+      <incoming>sequenceFlow_273537a1-204b-492e-bbb2-6344984aff54</incoming>
+      <outgoing>SequenceFlow_0ir1oq4</outgoing>
     </serviceTask>
-    <sequenceFlow id="sequenceFlow_da56cb9d-75e9-49d4-84a0-38939a1c4e9d" sourceRef="Activity-Reserve-car" targetRef="Activity-Book-hotel" />
     <boundaryEvent id="boundaryEvent_2e2edc51-817f-471b-8b58-4b35ee7d0cdd" attachedToRef="Activity-Book-hotel">
       <compensateEventDefinition id="compensateEventDefinition_04319a07-5565-4aa8-8889-1144e2825cea" />
     </boundaryEvent>
     <serviceTask id="Activity-Cancel-hotel-compensation" name="Cancel hotel" isForCompensation="true" camunda:type="external" camunda:topic="cancel-hotel" />
     <serviceTask id="Activity-Book-flight" name="Book flight" camunda:type="external" camunda:topic="book-flight">
-      <incoming>sequenceFlow_d0a8be0c-61c2-4b9a-b444-00dc7169849a</incoming>
+      <incoming>SequenceFlow_0yroa9a</incoming>
       <outgoing>sequenceFlow_8da52f66-25ad-475c-99ba-94985bf275c8</outgoing>
     </serviceTask>
-    <sequenceFlow id="sequenceFlow_d0a8be0c-61c2-4b9a-b444-00dc7169849a" sourceRef="Activity-Book-hotel" targetRef="Activity-Book-flight" />
     <boundaryEvent id="boundaryEvent_5641d48c-a48b-4f58-b400-0c752644367e" attachedToRef="Activity-Book-flight">
       <compensateEventDefinition id="compensateEventDefinition_3e976c18-8737-4ee8-9b0b-6833486ee26c" />
     </boundaryEvent>
@@ -51,6 +49,8 @@
       </endEvent>
       <sequenceFlow id="sequenceFlow_d8403dd8-50e4-458d-9198-3e1a0cd3646f" sourceRef="ToBeCompensated" targetRef="ErrorHandled" />
     </subProcess>
+    <sequenceFlow id="SequenceFlow_0ir1oq4" sourceRef="Activity-Book-hotel" targetRef="Activity-Reserve-car" />
+    <sequenceFlow id="SequenceFlow_0yroa9a" sourceRef="Activity-Reserve-car" targetRef="Activity-Book-flight" />
     <association id="association_fb3d85cc-8cfb-4ba3-8448-132e56ac74af" associationDirection="One" sourceRef="boundaryEvent_69b05d2f-9def-464d-a271-188ba53e2139" targetRef="Activity-Cancel-car-compensation" />
     <association id="association_493f14fe-a161-4547-a4be-4c8f81f5ccba" associationDirection="One" sourceRef="boundaryEvent_2e2edc51-817f-471b-8b58-4b35ee7d0cdd" targetRef="Activity-Cancel-hotel-compensation" />
     <association id="association_f164a0f0-29aa-477a-831a-bffa1180876c" associationDirection="One" sourceRef="boundaryEvent_5641d48c-a48b-4f58-b400-0c752644367e" targetRef="Activity-Cancel-flight-compensation" />
@@ -62,60 +62,55 @@
   <bpmndi:BPMNDiagram id="BPMNDiagram_3dcdb5b9-a9c3-4633-846d-337dcf00d2b3">
     <bpmndi:BPMNPlane id="BPMNPlane_fe8950c7-cb2b-42b5-85c7-0db6fcf0c51a" bpmnElement="FlowingTripBookingSaga">
       <bpmndi:BPMNShape id="BPMNShape_3073c9ad-5700-4f5f-9c41-91af3fbc4ad3" bpmnElement="Start-trip">
-        <dc:Bounds x="100" y="100" width="36" height="36" />
+        <dc:Bounds x="62" y="100" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="35" y="136" width="90" height="20" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_7f0fda77-fb93-4c9a-8beb-58250ba883fe" bpmnElement="Activity-Reserve-car">
-        <dc:Bounds x="186" y="78" width="100" height="80" />
+        <dc:Bounds x="350" y="78" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_3312be18-9161-4a86-a373-79129c38dc3a" bpmnElement="sequenceFlow_273537a1-204b-492e-bbb2-6344984aff54">
-        <di:waypoint xsi:type="dc:Point" x="136" y="118" />
-        <di:waypoint xsi:type="dc:Point" x="186" y="118" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="BPMNShape_8c9791e7-5fc8-454b-8d49-48024b1daf83" bpmnElement="boundaryEvent_69b05d2f-9def-464d-a271-188ba53e2139">
-        <dc:Bounds x="218" y="140" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_9fb1bed0-6a1e-4999-975e-561c3e985cb7" bpmnElement="Activity-Cancel-car-compensation">
-        <dc:Bounds x="260" y="186" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="BPMNEdge_73b9ea71-9ae5-4679-b1c6-39c7cb208f84" bpmnElement="association_fb3d85cc-8cfb-4ba3-8448-132e56ac74af">
-        <di:waypoint xsi:type="dc:Point" x="236" y="176" />
-        <di:waypoint xsi:type="dc:Point" x="236" y="226" />
-        <di:waypoint xsi:type="dc:Point" x="260" y="226" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="BPMNShape_1cd44b36-63c9-4a38-b03b-f40621cc33a5" bpmnElement="Activity-Book-hotel">
-        <dc:Bounds x="375" y="78" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="BPMNEdge_6e75e708-6dfb-40c3-8cd7-1abfbd55036b" bpmnElement="sequenceFlow_da56cb9d-75e9-49d4-84a0-38939a1c4e9d">
-        <di:waypoint xsi:type="dc:Point" x="286" y="118" />
-        <di:waypoint xsi:type="dc:Point" x="375" y="118" />
+        <di:waypoint xsi:type="dc:Point" x="98" y="118" />
+        <di:waypoint xsi:type="dc:Point" x="157" y="118" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="285.5" y="93" width="90" height="20" />
+          <dc:Bounds x="82.5" y="93" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="BPMNShape_a8e5c4eb-4f14-4d98-a99a-087569e34b97" bpmnElement="boundaryEvent_2e2edc51-817f-471b-8b58-4b35ee7d0cdd">
-        <dc:Bounds x="407" y="140" width="36" height="36" />
+      <bpmndi:BPMNShape id="BPMNShape_8c9791e7-5fc8-454b-8d49-48024b1daf83" bpmnElement="boundaryEvent_69b05d2f-9def-464d-a271-188ba53e2139">
+        <dc:Bounds x="382" y="140" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="380" y="176" width="90" height="20" />
+          <dc:Bounds x="355" y="176" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_9fb1bed0-6a1e-4999-975e-561c3e985cb7" bpmnElement="Activity-Cancel-car-compensation">
+        <dc:Bounds x="451" y="186" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_73b9ea71-9ae5-4679-b1c6-39c7cb208f84" bpmnElement="association_fb3d85cc-8cfb-4ba3-8448-132e56ac74af">
+        <di:waypoint xsi:type="dc:Point" x="400" y="176" />
+        <di:waypoint xsi:type="dc:Point" x="400" y="226" />
+        <di:waypoint xsi:type="dc:Point" x="451" y="226" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="BPMNShape_1cd44b36-63c9-4a38-b03b-f40621cc33a5" bpmnElement="Activity-Book-hotel">
+        <dc:Bounds x="157" y="78" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_a8e5c4eb-4f14-4d98-a99a-087569e34b97" bpmnElement="boundaryEvent_2e2edc51-817f-471b-8b58-4b35ee7d0cdd">
+        <dc:Bounds x="189" y="140" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="162" y="176" width="90" height="20" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_72f51c7b-0ca4-4d97-a14d-9c249cf3378a" bpmnElement="Activity-Cancel-hotel-compensation">
-        <dc:Bounds x="452" y="186" width="100" height="80" />
+        <dc:Bounds x="258" y="186" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_c8433ede-ae0b-44c9-8391-189b596d3ba9" bpmnElement="association_493f14fe-a161-4547-a4be-4c8f81f5ccba">
-        <di:waypoint xsi:type="dc:Point" x="425" y="176" />
-        <di:waypoint xsi:type="dc:Point" x="425" y="226" />
-        <di:waypoint xsi:type="dc:Point" x="452" y="226" />
+        <di:waypoint xsi:type="dc:Point" x="207" y="176" />
+        <di:waypoint xsi:type="dc:Point" x="207" y="226" />
+        <di:waypoint xsi:type="dc:Point" x="258" y="226" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="BPMNShape_5913b46c-6931-4918-876d-5d7ec918f1ba" bpmnElement="Activity-Book-flight">
         <dc:Bounds x="544" y="78" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="BPMNEdge_e5487067-51f4-4ce5-91eb-c58e681d2ed2" bpmnElement="sequenceFlow_d0a8be0c-61c2-4b9a-b444-00dc7169849a">
-        <di:waypoint xsi:type="dc:Point" x="475" y="118" />
-        <di:waypoint xsi:type="dc:Point" x="544" y="118" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="464.5" y="93" width="90" height="20" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="BPMNShape_1bacd5e4-4f39-4411-8b57-e442a37088fd" bpmnElement="boundaryEvent_5641d48c-a48b-4f58-b400-0c752644367e">
         <dc:Bounds x="576" y="140" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -179,11 +174,25 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="TextAnnotation_0elpk4w_di" bpmnElement="TextAnnotation_0elpk4w">
-        <dc:Bounds x="514" y="337" width="132" height="47" />
+        <dc:Bounds x="514" y="337" width="164" height="47" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Association_1wpbumc_di" bpmnElement="Association_1wpbumc">
-        <di:waypoint xsi:type="dc:Point" x="460" y="370" />
-        <di:waypoint xsi:type="dc:Point" x="514" y="366" />
+        <di:waypoint xsi:type="dc:Point" x="460" y="371" />
+        <di:waypoint xsi:type="dc:Point" x="514" y="367" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ir1oq4_di" bpmnElement="SequenceFlow_0ir1oq4">
+        <di:waypoint xsi:type="dc:Point" x="257" y="118" />
+        <di:waypoint xsi:type="dc:Point" x="350" y="118" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="303.5" y="97" width="0" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0yroa9a_di" bpmnElement="SequenceFlow_0yroa9a">
+        <di:waypoint xsi:type="dc:Point" x="450" y="118" />
+        <di:waypoint xsi:type="dc:Point" x="544" y="118" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="497" y="97" width="0" height="12" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

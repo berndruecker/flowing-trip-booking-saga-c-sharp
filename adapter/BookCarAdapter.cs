@@ -5,7 +5,7 @@ using CamundaClient.Worker;
 
 namespace FlowingTripBookingSaga.adapter
 {
-    [ExternalTaskTopic("reserve-car")]
+    [ExternalTaskTopic("book-car")]
     class BookCarAdapter : IExternalTaskAdapter
     {
 
