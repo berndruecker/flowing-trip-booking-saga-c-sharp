@@ -73,7 +73,8 @@ namespace FlowingTripBookingSaga
                 camunda.ExternalTaskService.Complete(workerId, externalTask.Id);
             });
             registerWorker("book-car", externalTask => {
-                Console.WriteLine("Book car now..."); 
+                Console.WriteLine("Book car now...");
+                camunda.ExternalTaskService.Complete(workerId, externalTask.Id);
                 //camunda.ExternalTaskService.Failure(workerId, externalTask.Id, "could not connect", (externalTask.Retries ?? 3) - 1, 5000);
             });
             registerWorker("cancel-car", externalTask => {
@@ -82,9 +83,9 @@ namespace FlowingTripBookingSaga
             });       
             registerWorker("book-flight", externalTask => {
                 Console.WriteLine("Reserving flight now...");
-                camunda.ExternalTaskService.Complete(workerId, externalTask.Id);
+                //camunda.ExternalTaskService.Complete(workerId, externalTask.Id);
                 //Console.WriteLine("Oh no - we hit a glitch!");
-                //camunda.ExternalTaskService.Error(workerId, externalTask.Id, "BookingFailed");
+                camunda.ExternalTaskService.Error(workerId, externalTask.Id, "BookingFailed");
             });
             registerWorker("cancel-flight", externalTask => {
                 Console.WriteLine("Cancelling flight now...");
