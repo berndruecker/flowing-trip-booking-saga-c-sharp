@@ -11,7 +11,7 @@ Using [Camunda](https://camunda.org/) you can implement the Saga by a BPMN XML f
 
 ![Compensation in BPMN](docs/example-bpmn.png)
 
-Run Camunda - which is a seperate process and still needs a JVM - for example using docker. More details on how to use Camunda from non-java environments can be found in [this blog post](https://medium.com/@berndruecker/use-camunda-without-touching-java-and-get-an-easy-to-use-microservice-orchestration-engine-talking-7bdf25ac198e)):
+Run Camunda, e.g. via Docker. More details on how to run Camunda for non-Java folks can be found in [Use Camunda without touching Java and get an easy-to-use REST-based orchestration and workflow engine](https://blog.bernd-ruecker.com/use-camunda-without-touching-java-and-get-an-easy-to-use-rest-based-orchestration-and-workflow-7bdf25ac198e):
 
 ```shell
 docker run -d --name camunda -p 8080:8080 camunda/camunda-bpm-platform:latest
