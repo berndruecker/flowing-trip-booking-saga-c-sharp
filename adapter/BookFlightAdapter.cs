@@ -15,7 +15,7 @@ namespace FlowingTripBookingSaga.adapter
             Console.WriteLine("Booking flight now... ON NO - there was a glitch, we cannot do it!");
             Console.WriteLine();
 
-            throw new UnrecoverableException("BookingFailed", "Could not book flight");
+            throw new UnrecoverableBusinessErrorException("BookingFailed", "Could not book flight");
             
         }
 

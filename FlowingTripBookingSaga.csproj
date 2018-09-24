@@ -57,12 +57,10 @@
     <EmbeddedResource Include="Models\FlowingTripBookingSaga.bpmn" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\CamundaConsulting\camunda-dot-net-showcase\CamundaClient\CamundaClient.csproj">
-      <Project>{D316A8E0-09CB-4D66-B635-94860C3EB799}</Project>
-      <Name>CamundaClient</Name>
-    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <PackageReference Include="BerndRuecker.Sample.CamundaClient" Version="0.0.1" />        
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
