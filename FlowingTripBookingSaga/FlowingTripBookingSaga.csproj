@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RootNamespace>FlowingTripBookingSaga</RootNamespace>
+    <AssemblyName>FlowingTripBookingSaga</AssemblyName> 
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Models\FlowingTripBookingSaga.bpmn" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="license.xml" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BerndRuecker.Sample.CamundaClient" Version="0.1.1" />        
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Models\FlowingTripBookingSaga.bpmn" />
+  </ItemGroup>
+</Project>
