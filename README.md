@@ -21,7 +21,7 @@ Now you can connect to the engine via [REST API](https://docs.camunda.org/manual
 
 ```cs
 var camunda = new CamundaEngineClient("http://localhost:8080/engine-rest/engine/default/", null, null);
-            
+
 // Deploy the BPMN XML file from the resources
 camunda.RepositoryService.Deploy("trip-booking", new List<object> {
        FileParameter.FromManifestResource(Assembly.GetExecutingAssembly(), "FlowingTripBookingSaga.Models.FlowingTripBookingSaga.bpmn") 
@@ -59,21 +59,22 @@ The engine will take care of state handling, compensation and could also handle 
 
 ![Cockpit Screenshot](docs/screenshot.png)
 
+## Get started
 
+You need:
 
-# Get started
-
-You need
-
-* Visual Studio
+* Visual Studio for Windows or Mac
+* .NET Core 2.2 SDK
 
 Required steps
 
 * Checkout or download this project
-* Checkout or download https://github.com/berndruecker/camunda-dot-net-showcase to have the client library avbailable
+* Restore Nuget packages
 * Run Camunda via Docker (or other means):
+
 ```shell
 docker run -d --name camunda -p 8080:8080 camunda/camunda-bpm-platform:latest
 ```
-* Run the [Program.cs](Program.cs) class as this is a main application doing everything and starting exactly one Saga that is always "crashing" in the flight booking. 
-* If you like you can access the Camunda webapplication on http://localhost:8080/
+
+* Run the [Program.cs](Program.cs) class as this is a main application doing everything and starting exactly one Saga that is always "crashing" in the flight booking.
+* If you like you can access the Camunda webapplication on [http://localhost:8080/](http://localhost:8080/)
