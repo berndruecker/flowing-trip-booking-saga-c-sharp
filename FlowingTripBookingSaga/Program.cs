@@ -36,21 +36,19 @@ namespace FlowingTripBookingSaga
         {
 			Console.WriteLine(logo);
 
-			//WaitForCamundaToStart();			
-
             Console.WriteLine("\n\n" + "Deploying models and start workers.\n\nPRESS ANY KEY TO STOP WORKERS.\n\n");
 
             camunda = new CamundaEngineClient(
                 camundaUri, null, null);
 
-            // Alternative way of doing it: Search assembly and automatically deploy all models to Camunda and start all found workers
-            // camunda.Startup();
-
             DeployModel();
-            RegisterWorker();
 
-            // start some instances:
-            for (int i = 0; i < 1; i++)
+			RegisterWorker();
+			// Alternative way of doing it: Search assembly and automatically deploy all models to Camunda and start all found workers
+			// camunda.Startup();
+
+			// start some instances:
+			for (int i = 0; i < 1; i++)
             {
                 string processInstanceId = camunda.BpmnWorkflowService.StartProcessInstance("FlowingTripBookingSaga", new Dictionary<string, object>()
                     {
@@ -62,31 +60,6 @@ namespace FlowingTripBookingSaga
             Console.ReadLine(); // wait for ANY KEY
             camunda.Shutdown(); // Stop Task Workers
         }
-
-		private static void WaitForCamundaToStart()
-		{
-			var client = new HttpClient
-			{
-				BaseAddress = camundaUri
-			};
-			var running = false;
-			do
-			{
-				Task.Delay(1000).GetAwaiter().GetResult();
-				try
-				{
-					Console.Write(".");
-					var response = client.GetAsync("").GetAwaiter().GetResult();
-					if (response.IsSuccessStatusCode)
-					{
-						running = true;
-					}
-				}
-				catch
-				{
-				}
-			} while (!running);
-		}
 
 		private static void DeployModel() { 
             camunda.RepositoryService.Deploy("trip-booking", new List<object> {
@@ -148,8 +121,7 @@ namespace FlowingTripBookingSaga
         private static void registerWorker(string topicName, Action<ExternalTask> workerFunction)
         {
             workers.Add(topicName, workerFunction);
-        }
-    
+        }    
     }
     
 }
