@@ -70,7 +70,7 @@ You need
 Required steps
 
 * Checkout or download this project
-* Checkout or download https://github.com/berndruecker/camunda-dot-net-showcase to have the client library avbailable
+* Checkout or download https://github.com/berndruecker/camunda-dot-net-showcase to have the client library available
 * Run Camunda via Docker (or other means):
 ```shell
 docker run -d --name camunda -p 8080:8080 camunda/camunda-bpm-platform:latest
